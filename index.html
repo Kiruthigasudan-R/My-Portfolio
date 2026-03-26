@@ -519,7 +519,7 @@ h2.section-title {
 
 .project-body { display: grid; grid-template-columns: 1fr 1fr; }
 .project-contrib { padding: 40px 48px; border-right: 1px solid var(--border); }
-.project-flow { padding: 40px 48px; background: rgba(0,0,0,0.2); }
+.project-flow { padding: 40px 48px; background: rgba(0,0,0,0.2); position: relative; }
 .body-label {
   font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--white20); margin-bottom: 24px;
@@ -669,7 +669,7 @@ h2.section-title {
   transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
 }
 .contact-card:hover {
-  border-color: rgba(200,169,110,0.3); transform: translateY(-4px);
+  border-color: rgba(200, 169, 110, 0.3); transform: translateY(-4px);
   box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--gold-dim);
 }
 .contact-icon {
@@ -737,9 +737,128 @@ footer {
   .support-inner { padding: 32px 28px; }
   .support-tags-row { gap: 8px; }
 }
+
+/* ── ADMIN UI SYSTEM ── */
+.admin-controls, .delete-btn, .add-row-btn, .add-point-btn, .flow-controls, .flow-delete-btn {
+    display: none;
+}
+body.admin-mode .admin-controls, 
+body.admin-mode .delete-btn, 
+body.admin-mode .add-row-btn,
+body.admin-mode .add-point-btn,
+body.admin-mode .flow-controls,
+body.admin-mode .flow-delete-btn {
+    display: inline-flex;
+}
+body.admin-mode [contenteditable="true"] {
+    outline: 1px dashed rgba(200, 169, 110, 0.4);
+    cursor: text;
+}
+body.admin-mode [contenteditable="true"]:focus {
+    outline: 2px solid var(--gold);
+    background: rgba(200, 169, 110, 0.05);
+}
+.save-floating-btn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 9999;
+    border: none;
+    transition: transform 0.2s;
+}
+.save-floating-btn:hover { transform: scale(1.05); }
+body.admin-mode .save-floating-btn { display: block; }
+
+.add-row-btn {
+    background: rgba(200, 169, 110, 0.15);
+    border: 1px dashed var(--gold);
+    color: var(--gold);
+    padding: 20px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 30px;
+}
+
+.add-point-btn {
+    background: var(--gold-dim);
+    border: 1px solid rgba(200,169,110,0.2);
+    color: var(--gold);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.delete-btn {
+    background: #FF5F57;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+/* ── DYNAMIC FLOWCHART STYLES ── */
+.flow-controls {
+    position: absolute;
+    top: 10px;
+    right: 48px;
+    gap: 5px;
+    background: var(--surface2);
+    padding: 5px;
+    border-radius: 8px;
+    z-index: 5;
+    border: 1px solid var(--border);
+}
+.flow-ctrl-btn {
+    background: var(--gold-dim);
+    border: 1px solid rgba(200,169,110,0.2);
+    color: var(--gold);
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.flow-ctrl-btn:hover { background: var(--gold); color: var(--ink); }
+
+.flow-delete-btn {
+    background: rgba(255, 95, 87, 0.15);
+    border: 1px solid rgba(255, 95, 87, 0.3);
+    color: #FF5F57;
+}
+.flow-delete-btn:hover { background: #FF5F57; color: white; border-color: #FF5F57; }
 </style>
 </head>
-<body>
+<body id="portfolio-body">
 
 <div id="cursor">
   <div class="cur-ring" id="curRing"></div>
@@ -982,170 +1101,188 @@ footer {
       <div class="project-group-label-line"></div>
     </div>
 
-    <div class="project-card reveal">
-      <div class="project-top">
-        <div class="project-meta">
-          <span class="project-status status-live"><span class="status-dot"></span>Live &amp; Active</span>
-          <span class="project-client">Arista Networks · MPAT</span>
-        </div>
-        <h3 class="project-name">Master Pricing Automation Tool</h3>
-        <div class="project-sub">Intelligent Pricing Engine for Multi-Supplier Sourcing</div>
-      </div>
-      <div class="project-collapsible">
-        <p class="project-desc">An intelligent pricing engine eliminating manual pricing comparison with systematic logic for allocation splits, cost signal weighting, and decision-making under incomplete data. Live and actively used daily by the Arista procurement team.</p>
-        <div class="project-metrics">
-          <div class="metric"><span class="metric-val">30%</span><div class="metric-lbl">Faster sourcing decisions</div></div>
-          <div class="metric"><span class="metric-val">Live</span><div class="metric-lbl">Active daily use</div></div>
-          <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Defects in UAT</div></div>
-          <div class="metric"><span class="metric-val">Multi</span><div class="metric-lbl">Supplier datasets</div></div>
-        </div>
-        <div class="project-body">
-          <div class="project-contrib">
-            <div class="body-label">My Contribution</div>
-            <ul class="contrib-list">
-              <li>Conceptualised the pricing engine and owned the full product design</li>
-              <li>Defined decision logic — when to split allocations, how to weight cost signals</li>
-              <li>Specified edge case handling for incomplete or conflicting supplier data</li>
-              <li>Authored full functional specifications for the development team</li>
-              <li>Managed developers through build and personally conducted UAT</li>
-              <li>Validated output accuracy before go-live — zero defects found</li>
-            </ul>
-          </div>
-          <div class="project-flow">
-            <div class="body-label">Pricing Decision Flow</div>
-            <svg class="flow-svg" viewBox="0 0 380 440" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                  <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
-                </marker>
-              </defs>
-              <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">Procurement initiates RFQ</text>
-              <line x1="190" y1="42" x2="190" y2="60" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
-              <rect x="40" y="60" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Multi-supplier dataset loaded</text>
-              <text x="190" y="91" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Price · Lead time · Quantity · Risk signals</text>
-              <line x1="190" y1="100" x2="190" y2="118" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
-              <rect x="40" y="118" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Data completeness check</text>
-              <text x="190" y="149" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Missing fields flagged · Edge case handling</text>
-              <line x1="190" y1="158" x2="190" y2="176" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
-              <rect x="40" y="176" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Cost signal weighting applied</text>
-              <text x="190" y="207" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Defined rules rank suppliers by weighted score</text>
-              <line x1="190" y1="216" x2="190" y2="234" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
-              <rect x="40" y="234" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Split allocation logic runs</text>
-              <text x="190" y="265" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Single vs split supplier recommendation</text>
-              <line x1="190" y1="274" x2="190" y2="292" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)"/>
-              <rect x="70" y="292" width="240" height="36" rx="20" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.5)" stroke-width="1.5"/>
-              <text x="190" y="314" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">Optimised pricing recommendation</text>
-              <line x1="190" y1="328" x2="100" y2="358" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)"/>
-              <line x1="190" y1="328" x2="280" y2="358" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)"/>
-              <rect x="10" y="358" width="165" height="28" rx="8" fill="rgba(46,204,113,0.08)" stroke="rgba(46,204,113,0.3)" stroke-width="1"/>
-              <text x="92" y="376" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2ECC71">Buyer approves ✓</text>
-              <rect x="205" y="358" width="165" height="28" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="288" y="376" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="rgba(250,250,248,0.5)">Escalate to review</text>
-              <text x="190" y="425" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
-            </svg>
-          </div>
-        </div>
-        <div class="project-tags">
-          <span class="project-tag">Pricing Logic Design</span>
-          <span class="project-tag">Multi-supplier Analysis</span>
-          <span class="project-tag">Decision Framework</span>
-          <span class="project-tag">BRD / FRD</span>
-          <span class="project-tag">UAT</span>
-          <span class="project-tag">Procurement Automation</span>
-        </div>
-      </div>
-    </div>
+    <div class="add-row-btn" onclick="addNewProject('active')">+ Add New Project Card</div>
 
-    <div class="project-card reveal reveal-delay-1">
-      <div class="project-top">
-        <div class="project-meta">
-          <span class="project-status status-live"><span class="status-dot"></span>Live &amp; Active</span>
-          <span class="project-client">Arista Networks</span>
-        </div>
-        <h3 class="project-name">Spares Automation Tool</h3>
-        <div class="project-sub">Python-Based RFQ Automation Across Three Modules</div>
-      </div>
-      <div class="project-collapsible">
-        <p class="project-desc">A Python-based RFQ automation system spanning three independent procurement modules. Conceptualised to eliminate manual errors and delays in high-volume contract cost adjustments. Live and used daily by the Arista procurement team.</p>
-        <div class="project-metrics">
-          <div class="metric"><span class="metric-val">3</span><div class="metric-lbl">Independent modules designed</div></div>
-          <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Manual errors post-launch</div></div>
-          <div class="metric"><span class="metric-val">Live</span><div class="metric-lbl">Active daily use</div></div>
-          <div class="metric"><span class="metric-val">40%</span><div class="metric-lbl">Turnaround time reduced</div></div>
-        </div>
-        <div class="project-body">
-          <div class="project-contrib">
-            <div class="body-label">My Contribution</div>
-            <ul class="contrib-list">
-              <li>Conceptualised the solution and owned full product design</li>
-              <li>Defined functional requirements for all three independent modules</li>
-              <li>Specified rule-based validation logic for contract cost accuracy</li>
-              <li>Defined error handling and exception workflows for edge cases</li>
-              <li>Managed developer execution through full build cycle</li>
-              <li>Conducted full UAT before go-live</li>
-            </ul>
+    <div id="project-list-active">
+        <div class="project-card reveal visible">
+          <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
+          <div class="project-top">
+            <div class="project-meta">
+              <span class="project-status status-live"><span class="status-dot"></span>Live &amp; Active</span>
+              <span class="project-client">Arista Networks · MPAT</span>
+            </div>
+            <h3 class="project-name">Master Pricing Automation Tool</h3>
+            <div class="project-sub">Intelligent Pricing Engine for Multi-Supplier Sourcing</div>
           </div>
-          <div class="project-flow">
-            <div class="body-label">Supplier Management &amp; RFQ Dispatch</div>
-            <svg class="flow-svg" viewBox="0 0 380 460" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                  <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
-                </marker>
-              </defs>
-              <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">Admin opens supplier module</text>
-              <line x1="190" y1="42" x2="90" y2="72" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
-              <line x1="190" y1="42" x2="290" y2="72" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
-              <rect x="5" y="72" width="165" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="87" y="87" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Add single supplier</text>
-              <text x="87" y="103" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Manual entry + validation</text>
-              <rect x="210" y="72" width="165" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="292" y="87" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Mass upload</text>
-              <text x="292" y="103" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Excel template · bulk import</text>
-              <line x1="87" y1="112" x2="150" y2="145" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
-              <line x1="292" y1="112" x2="230" y2="145" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
-              <rect x="40" y="145" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="160" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Validation checks run</text>
-              <text x="190" y="176" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Duplicate · Email format · Required fields</text>
-              <line x1="190" y1="185" x2="190" y2="203" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
-              <rect x="40" y="203" width="300" height="40" rx="8" fill="rgba(200,169,110,0.05)" stroke="rgba(200,169,110,0.2)" stroke-width="1"/>
-              <text x="190" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(200,169,110,0.9)">Supplier added · audit log created</text>
-              <text x="190" y="234" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(200,169,110,0.5)">Created By / On tracked automatically</text>
-              <line x1="190" y1="243" x2="190" y2="261" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
-              <rect x="40" y="261" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="276" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Set "Ability to Quote" status</text>
-              <text x="190" y="292" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Can Quote → included · Can't → excluded</text>
-              <line x1="190" y1="301" x2="190" y2="319" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
-              <rect x="60" y="319" width="260" height="36" rx="20" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.5)" stroke-width="1.5"/>
-              <text x="190" y="341" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">RFQ dispatched to eligible suppliers</text>
-              <line x1="190" y1="355" x2="75" y2="382" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
-              <line x1="190" y1="355" x2="190" y2="382" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
-              <line x1="190" y1="355" x2="305" y2="382" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
-              <rect x="5" y="382" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="65" y="400" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Edit supplier</text>
-              <rect x="130" y="382" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="400" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Export CSV/Excel</text>
-              <rect x="255" y="382" width="120" height="28" rx="7" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
-              <text x="315" y="400" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(239,68,68,0.7)">Soft delete</text>
-              <text x="190" y="445" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
-            </svg>
+          <div class="project-collapsible">
+            <p class="project-desc">An intelligent pricing engine eliminating manual pricing comparison with systematic logic for allocation splits, cost signal weighting, and decision-making under incomplete data. Live and actively used daily by the Arista procurement team.</p>
+            <div class="project-metrics">
+              <div class="metric"><span class="metric-val">30%</span><div class="metric-lbl">Faster sourcing decisions</div></div>
+              <div class="metric"><span class="metric-val">Live</span><div class="metric-lbl">Active daily use</div></div>
+              <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Defects in UAT</div></div>
+              <div class="metric"><span class="metric-val">Multi</span><div class="metric-lbl">Supplier datasets</div></div>
+            </div>
+            <div class="project-body">
+              <div class="project-contrib">
+                <div class="body-label">My Contribution <button class="add-point-btn" onclick="addBullet(event, this)">+ Point</button></div>
+                <ul class="contrib-list">
+                  <li>Conceptualised the pricing engine and owned the full product design</li>
+                  <li>Defined decision logic — when to split allocations, how to weight cost signals</li>
+                  <li>Specified edge case handling for incomplete or conflicting supplier data</li>
+                  <li>Authored full functional specifications for the development team</li>
+                  <li>Managed developers through build and personally conducted UAT</li>
+                  <li>Validated output accuracy before go-live — zero defects found</li>
+                </ul>
+              </div>
+              <div class="project-flow">
+                <div class="body-label">Pricing Decision Flow</div>
+                <div class="flow-controls">
+                    <button class="flow-ctrl-btn" onclick="addFlowStep(this)">+ Step</button>
+                    <button class="flow-ctrl-btn" onclick="addFlowArrow(this)">+ Arrow</button>
+                    <button class="flow-ctrl-btn" onclick="clearFlow(this)">Clear</button>
+                    <button class="flow-ctrl-btn flow-delete-btn" onclick="removeFlowSection(this)">Delete Flowchart</button>
+                </div>
+                <svg class="flow-svg" viewBox="0 0 380 440" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
+                    </marker>
+                  </defs>
+                  <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
+                  <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">Procurement initiates RFQ</text>
+                  <line x1="190" y1="42" x2="190" y2="60" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="60" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Multi-supplier dataset loaded</text>
+                  <text x="190" y="91" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Price · Lead time · Quantity · Risk signals</text>
+                  <line x1="190" y1="100" x2="190" y2="118" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="118" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Data completeness check</text>
+                  <text x="190" y="149" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Missing fields flagged · Edge case handling</text>
+                  <line x1="190" y1="158" x2="190" y2="176" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="176" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Cost signal weighting applied</text>
+                  <text x="190" y="207" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Defined rules rank suppliers by weighted score</text>
+                  <line x1="190" y1="216" x2="190" y2="234" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="234" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Split allocation logic runs</text>
+                  <text x="190" y="265" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Single vs split supplier recommendation</text>
+                  <line x1="190" y1="274" x2="190" y2="292" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)"/>
+                  <rect x="70" y="292" width="240" height="36" rx="20" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.5)" stroke-width="1.5"/>
+                  <text x="190" y="314" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">Optimised pricing recommendation</text>
+                  <line x1="190" y1="328" x2="100" y2="358" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)"/>
+                  <line x1="190" y1="328" x2="280" y2="358" stroke="#C8A96E" stroke-width="1" marker-end="url(#a1)"/>
+                  <rect x="10" y="358" width="165" height="28" rx="8" fill="rgba(46,204,113,0.08)" stroke="rgba(46,204,113,0.3)" stroke-width="1"/>
+                  <text x="92" y="376" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2ECC71">Buyer approves ✓</text>
+                  <rect x="205" y="358" width="165" height="28" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="288" y="376" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="rgba(250,250,248,0.5)">Escalate to review</text>
+                  <text x="190" y="425" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
+                </svg>
+              </div>
+            </div>
+            <div class="project-tags">
+              <span class="project-tag">Pricing Logic Design</span>
+              <span class="project-tag">Multi-supplier Analysis</span>
+              <span class="project-tag">Decision Framework</span>
+              <span class="project-tag">BRD / FRD</span>
+              <span class="project-tag">UAT</span>
+              <span class="project-tag">Procurement Automation</span>
+            </div>
           </div>
         </div>
-        <div class="project-tags">
-          <span class="project-tag">RFQ Automation</span>
-          <span class="project-tag">Python-based</span>
-          <span class="project-tag">Rule-based Validation</span>
-          <span class="project-tag">Supplier Management</span>
-          <span class="project-tag">UAT</span>
-          <span class="project-tag">Procurement</span>
+
+        <div class="project-card reveal visible">
+          <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
+          <div class="project-top">
+            <div class="project-meta">
+              <span class="project-status status-live"><span class="status-dot"></span>Live &amp; Active</span>
+              <span class="project-client">Arista Networks</span>
+            </div>
+            <h3 class="project-name">Spares Automation Tool</h3>
+            <div class="project-sub">Python-Based RFQ Automation Across Three Modules</div>
+          </div>
+          <div class="project-collapsible">
+            <p class="project-desc">A Python-based RFQ automation system spanning three independent procurement modules. Conceptualised to eliminate manual errors and delays in high-volume contract cost adjustments. Live and used daily by the Arista procurement team.</p>
+            <div class="project-metrics">
+              <div class="metric"><span class="metric-val">3</span><div class="metric-lbl">Independent modules designed</div></div>
+              <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Manual errors post-launch</div></div>
+              <div class="metric"><span class="metric-val">Live</span><div class="metric-lbl">Active daily use</div></div>
+              <div class="metric"><span class="metric-val">40%</span><div class="metric-lbl">Turnaround time reduced</div></div>
+            </div>
+            <div class="project-body">
+              <div class="project-contrib">
+                <div class="body-label">My Contribution <button class="add-point-btn" onclick="addBullet(event, this)">+ Point</button></div>
+                <ul class="contrib-list">
+                  <li>Conceptualised the solution and owned full product design</li>
+                  <li>Defined functional requirements for all three independent modules</li>
+                  <li>Specified rule-based validation logic for contract cost accuracy</li>
+                  <li>Defined error handling and exception workflows for edge cases</li>
+                  <li>Managed developer execution through full build cycle</li>
+                  <li>Conducted full UAT before go-live</li>
+                </ul>
+              </div>
+              <div class="project-flow">
+                <div class="body-label">Supplier Management &amp; RFQ Dispatch</div>
+                <div class="flow-controls">
+                    <button class="flow-ctrl-btn" onclick="addFlowStep(this)">+ Step</button>
+                    <button class="flow-ctrl-btn" onclick="addFlowArrow(this)">+ Arrow</button>
+                    <button class="flow-ctrl-btn" onclick="clearFlow(this)">Clear</button>
+                    <button class="flow-ctrl-btn flow-delete-btn" onclick="removeFlowSection(this)">Delete Flowchart</button>
+                </div>
+                <svg class="flow-svg" viewBox="0 0 380 460" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
+                    </marker>
+                  </defs>
+                  <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
+                  <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">Admin opens supplier module</text>
+                  <line x1="190" y1="42" x2="90" y2="72" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+                  <line x1="190" y1="42" x2="290" y2="72" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+                  <rect x="5" y="72" width="165" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="87" y="87" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Add single supplier</text>
+                  <text x="87" y="103" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Manual entry + validation</text>
+                  <rect x="210" y="72" width="165" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="292" y="87" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Mass upload</text>
+                  <text x="292" y="103" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Excel template · bulk import</text>
+                  <line x1="87" y1="112" x2="150" y2="145" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+                  <line x1="292" y1="112" x2="230" y2="145" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="145" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="160" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Validation checks run</text>
+                  <text x="190" y="176" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Duplicate · Email format · Required fields</text>
+                  <line x1="190" y1="185" x2="190" y2="203" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="203" width="300" height="40" rx="8" fill="rgba(200,169,110,0.05)" stroke="rgba(200,169,110,0.2)" stroke-width="1"/>
+                  <text x="190" y="218" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(200,169,110,0.9)">Supplier added · audit log created</text>
+                  <text x="190" y="234" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(200,169,110,0.5)">Created By / On tracked automatically</text>
+                  <line x1="190" y1="243" x2="190" y2="261" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="261" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="276" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Set "Ability to Quote" status</text>
+                  <text x="190" y="292" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Can Quote → included · Can't → excluded</text>
+                  <line x1="190" y1="301" x2="190" y2="319" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
+                  <rect x="60" y="319" width="260" height="36" rx="20" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.5)" stroke-width="1.5"/>
+                  <text x="190" y="341" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">RFQ dispatched to eligible suppliers</text>
+                  <line x1="190" y1="355" x2="75" y2="382" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
+                  <line x1="190" y1="355" x2="190" y2="382" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
+                  <line x1="190" y1="355" x2="305" y2="382" stroke="#C8A96E" stroke-width="1" marker-end="url(#a2)"/>
+                  <rect x="5" y="382" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="65" y="400" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Edit supplier</text>
+                  <rect x="130" y="382" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="400" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Export CSV/Excel</text>
+                  <rect x="255" y="382" width="120" height="28" rx="7" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                  <text x="315" y="400" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(239,68,68,0.7)">Soft delete</text>
+                  <text x="190" y="445" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
+                </svg>
+              </div>
+            </div>
+            <div class="project-tags">
+              <span class="project-tag">RFQ Automation</span>
+              <span class="project-tag">Python-based</span>
+              <span class="project-tag">Rule-based Validation</span>
+              <span class="project-tag">Supplier Management</span>
+              <span class="project-tag">UAT</span>
+              <span class="project-tag">Procurement</span>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
 
     <div class="project-group-label reveal">
@@ -1153,335 +1290,164 @@ footer {
       <div class="project-group-label-line"></div>
     </div>
 
-    <div class="project-card reveal">
-      <div class="project-top">
-        <div class="project-meta">
-          <span class="project-status status-pre"><span class="status-dot"></span>Pre-Launch</span>
-          <span class="project-client">InESS Solutions — Internal Product</span>
-        </div>
-        <h3 class="project-name">SaaS RFQ Management Platform</h3>
-        <div class="project-sub">Multi-Tenant SaaS · Supplier Portal · AI Dashboards</div>
-      </div>
-      <div class="project-collapsible">
-        <p class="project-desc">A fully functional multi-tenant SaaS platform for end-to-end RFQ management — including product website, subscription system, supplier portal, buyer dashboard, and AI-driven KPI reporting. Designed from scratch and built with company developers from my functional specifications.</p>
-        <div class="project-metrics">
-          <div class="metric"><span class="metric-val">50%</span><div class="metric-lbl">Approval time reduction</div></div>
-          <div class="metric"><span class="metric-val">3</span><div class="metric-lbl">User personas designed</div></div>
-          <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Defects in UAT</div></div>
-          <div class="metric"><span class="metric-val">5</span><div class="metric-lbl">Core modules delivered</div></div>
-        </div>
-        <div class="project-body">
-          <div class="project-contrib">
-            <div class="body-label">My Contribution</div>
-            <ul class="contrib-list">
-              <li>Conceptualised the entire product and owned the full vision</li>
-              <li>Designed onboarding — OTP flow, tenant ID creation, multi-tool login</li>
-              <li>Defined supplier management logic with ability-to-quote rules and audit trails</li>
-              <li>Specified full RFQ workflow from part selection to automated approval</li>
-              <li>Designed role-based access for Admin, Supplier, and Buyer personas</li>
-              <li>Managed developers through full build and conducted UAT</li>
-            </ul>
-          </div>
-          <div class="project-flow">
-            <div class="body-label">Onboarding &amp; RFQ Cycle</div>
-            <svg class="flow-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                  <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
-                </marker>
-              </defs>
-              <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">User visits sign-up page</text>
-              <line x1="190" y1="42" x2="190" y2="60" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
-              <rect x="30" y="60" width="320" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Enter details</text>
-              <text x="190" y="91" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Name · Work email · Company · Password</text>
-              <line x1="190" y1="100" x2="190" y2="118" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
-              <rect x="30" y="118" width="320" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">System validates</text>
-              <text x="190" y="149" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Blocks Gmail/Yahoo · CAPTCHA · Domain check</text>
-              <line x1="190" y1="158" x2="190" y2="176" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
-              <rect x="30" y="176" width="320" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">OTP sent to work email</text>
-              <text x="190" y="207" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Expires 10 min · Max 3 tries · Hashed storage</text>
-              <line x1="190" y1="216" x2="190" y2="234" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
-              <rect x="30" y="234" width="320" height="40" rx="8" fill="rgba(200,169,110,0.05)" stroke="rgba(200,169,110,0.2)" stroke-width="1"/>
-              <text x="190" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(200,169,110,0.9)">Tenant ID + User ID created</text>
-              <text x="190" y="265" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(200,169,110,0.5)">Welcome email with login link sent</text>
-              <line x1="190" y1="274" x2="190" y2="292" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
-              <rect x="70" y="292" width="240" height="34" rx="20" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.5)" stroke-width="1.5"/>
-              <text x="190" y="313" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">Login → role-specific dashboard</text>
-              <line x1="190" y1="326" x2="65" y2="356" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
-              <line x1="190" y1="326" x2="190" y2="356" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
-              <line x1="190" y1="326" x2="315" y2="356" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
-              <rect x="0" y="356" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="60" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Admin dashboard</text>
-              <rect x="130" y="356" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Buyer dashboard</text>
-              <rect x="260" y="356" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="320" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Supplier portal</text>
-              <line x1="190" y1="384" x2="190" y2="408" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
-              <rect x="30" y="408" width="320" height="28" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-              <text x="190" y="426" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Buyer creates RFQ → supplier quotes → approval</text>
-              <line x1="190" y1="436" x2="95" y2="462" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
-              <line x1="190" y1="436" x2="285" y2="462" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
-              <rect x="10" y="462" width="155" height="28" rx="7" fill="rgba(46,204,113,0.1)" stroke="rgba(46,204,113,0.3)" stroke-width="1.5"/>
-              <text x="88" y="480" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2ECC71">Approved ✓</text>
-              <rect x="215" y="462" width="155" height="28" rx="7" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
-              <text x="292" y="480" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="rgba(239,68,68,0.7)">Rejected / No bid</text>
-              <text x="190" y="510" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
-            </svg>
-          </div>
-        </div>
-        <div class="project-tags">
-          <span class="project-tag">Multi-tenant SaaS</span>
-          <span class="project-tag">BRD / FRD</span>
-          <span class="project-tag">Role-based Access</span>
-          <span class="project-tag">AI Dashboards</span>
-          <span class="project-tag">OTP Authentication</span>
-          <span class="project-tag">Agile / JIRA</span>
-        </div>
-      </div>
-    </div>
+    <div class="add-row-btn" onclick="addNewProject('pre')">+ Add New Project Card</div>
 
-    <div class="project-card reveal reveal-delay-1">
-      <div class="project-top">
-        <div class="project-meta">
-          <span class="project-status status-pre"><span class="status-dot"></span>Pre-Launch</span>
-          <span class="project-client">InESS Solutions — Internal Product</span>
-        </div>
-        <h3 class="project-name">Inventory &amp; Logistics Tool</h3>
-        <div class="project-sub">End-to-End Inbound &amp; Outbound Tracking System</div>
-      </div>
-      <div class="project-collapsible">
-        <p class="project-desc">A unified inventory and logistics management system providing real-time visibility across both inbound and outbound material flows. Designed to eliminate siloed tracking, reduce fulfilment errors, and give procurement teams a single source of truth from goods receipt through to dispatch.</p>
-        <div class="project-metrics">
-          <div class="metric"><span class="metric-val">2-in-1</span><div class="metric-lbl">Inbound + outbound in one platform</div></div>
-          <div class="metric"><span class="metric-val">Real</span><div class="metric-lbl">Time stock visibility</div></div>
-          <div class="metric"><span class="metric-val">Full</span><div class="metric-lbl">Audit trail designed</div></div>
-          <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Defects in UAT</div></div>
-        </div>
-        <div class="project-body">
-          <div class="project-contrib">
-            <div class="body-label">My Contribution</div>
-            <ul class="contrib-list">
-              <li>Conceptualised the unified inbound + outbound tracking architecture</li>
-              <li>Defined inbound flows: GRN, quality inspection triggers, stock receipts</li>
-              <li>Defined outbound flows: dispatch orders, delivery tracking, returns handling</li>
-              <li>Designed real-time stock level logic with low-stock alert thresholds</li>
-              <li>Specified role-based access and audit trail requirements</li>
-              <li>Managed developers through build and conducted full UAT</li>
-            </ul>
+    <div id="project-list-pre">
+        <div class="project-card reveal">
+          <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
+          <div class="project-top">
+            <div class="project-meta">
+              <span class="project-status status-pre"><span class="status-dot"></span>Pre-Launch</span>
+              <span class="project-client">InESS Solutions — Internal Product</span>
+            </div>
+            <h3 class="project-name">SaaS RFQ Management Platform</h3>
+            <div class="project-sub">Multi-Tenant SaaS · Supplier Portal · AI Dashboards</div>
           </div>
-          <div class="project-flow">
-            <div class="body-label">Inbound &amp; Outbound Flow</div>
-            <svg class="flow-svg" viewBox="0 0 380 460" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                  <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
-                </marker>
-              </defs>
-              <text x="95" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" letter-spacing="0.1em" fill="rgba(200,169,110,0.6)">INBOUND</text>
-              <rect x="10" y="26" width="170" height="30" rx="7" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="95" y="45" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#C8A96E">PO raised by buyer</text>
-              <line x1="95" y1="56" x2="95" y2="72" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="10" y="72" width="170" height="30" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="95" y="91" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Supplier ships goods</text>
-              <line x1="95" y1="102" x2="95" y2="118" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="10" y="118" width="170" height="30" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="95" y="137" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">GRN recorded</text>
-              <line x1="95" y1="148" x2="95" y2="164" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="10" y="164" width="170" height="30" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="95" y="183" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Quality inspection</text>
-              <line x1="95" y1="194" x2="95" y2="210" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="10" y="210" width="170" height="30" rx="7" fill="rgba(46,204,113,0.06)" stroke="rgba(46,204,113,0.2)" stroke-width="1"/>
-              <text x="95" y="229" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#2ECC71">Stock added to inventory ✓</text>
-              <text x="285" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" font-weight="700" letter-spacing="0.1em" fill="rgba(200,169,110,0.6)">OUTBOUND</text>
-              <rect x="200" y="26" width="170" height="30" rx="7" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="285" y="45" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#C8A96E">Dispatch order created</text>
-              <line x1="285" y1="56" x2="285" y2="72" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="200" y="72" width="170" height="30" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="285" y="91" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Stock availability check</text>
-              <line x1="285" y1="102" x2="285" y2="118" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="200" y="118" width="170" height="30" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="285" y="137" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Pick &amp; pack confirmed</text>
-              <line x1="285" y1="148" x2="285" y2="164" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="200" y="164" width="170" height="30" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="285" y="183" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Shipment dispatched</text>
-              <line x1="285" y1="194" x2="285" y2="210" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="200" y="210" width="170" height="30" rx="7" fill="rgba(46,204,113,0.06)" stroke="rgba(46,204,113,0.2)" stroke-width="1"/>
-              <text x="285" y="229" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="#2ECC71">Delivery confirmed ✓</text>
-              <line x1="95" y1="240" x2="160" y2="270" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <line x1="285" y1="240" x2="220" y2="270" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)" stroke-dasharray="3,3"/>
-              <rect x="60" y="270" width="260" height="36" rx="20" fill="rgba(200,169,110,0.12)" stroke="rgba(200,169,110,0.4)" stroke-width="1.5"/>
-              <text x="190" y="292" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">Real-time stock dashboard updated</text>
-              <line x1="190" y1="306" x2="95" y2="330" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)"/>
-              <line x1="190" y1="306" x2="285" y2="330" stroke="#C8A96E" stroke-width="1" marker-end="url(#a4)"/>
-              <rect x="10" y="330" width="160" height="28" rx="7" fill="rgba(245,158,11,0.06)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
-              <text x="90" y="348" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(245,158,11,0.8)">Low-stock alert triggered</text>
-              <rect x="210" y="330" width="160" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="290" y="348" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.4)">Audit log recorded</text>
-              <text x="190" y="430" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
-            </svg>
+          <div class="project-collapsible">
+            <p class="project-desc">A fully functional multi-tenant SaaS platform for end-to-end RFQ management — including product website, subscription system, supplier portal, buyer dashboard, and AI-driven KPI reporting. Designed from scratch and built with company developers from my functional specifications.</p>
+            <div class="project-metrics">
+              <div class="metric"><span class="metric-val">50%</span><div class="metric-lbl">Approval time reduction</div></div>
+              <div class="metric"><span class="metric-val">3</span><div class="metric-lbl">User personas designed</div></div>
+              <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Defects in UAT</div></div>
+              <div class="metric"><span class="metric-val">5</span><div class="metric-lbl">Core modules delivered</div></div>
+            </div>
+            <div class="project-body">
+              <div class="project-contrib">
+                <div class="body-label">My Contribution <button class="add-point-btn" onclick="addBullet(event, this)">+ Point</button></div>
+                <ul class="contrib-list">
+                  <li>Conceptualised the entire product and owned the full vision</li>
+                  <li>Designed onboarding — OTP flow, tenant ID creation, multi-tool login</li>
+                  <li>Defined supplier management logic with ability-to-quote rules and audit trails</li>
+                  <li>Specified full RFQ workflow from part selection to automated approval</li>
+                  <li>Designed role-based access for Admin, Supplier, and Buyer personas</li>
+                  <li>Managed developers through full build and conducted UAT</li>
+                </ul>
+              </div>
+              <div class="project-flow">
+                <div class="body-label">Onboarding &amp; RFQ Cycle</div>
+                <div class="flow-controls">
+                    <button class="flow-ctrl-btn" onclick="addFlowStep(this)">+ Step</button>
+                    <button class="flow-ctrl-btn" onclick="addFlowArrow(this)">+ Arrow</button>
+                    <button class="flow-ctrl-btn" onclick="clearFlow(this)">Clear</button>
+                    <button class="flow-ctrl-btn flow-delete-btn" onclick="removeFlowSection(this)">Delete Flowchart</button>
+                </div>
+                <svg class="flow-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
+                    </marker>
+                  </defs>
+                  <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
+                  <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">User visits sign-up page</text>
+                  <line x1="190" y1="42" x2="190" y2="60" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
+                  <rect x="30" y="60" width="320" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Enter details</text>
+                  <text x="190" y="91" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Name · Work email · Company · Password</text>
+                  <line x1="190" y1="100" x2="190" y2="118" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
+                  <rect x="30" y="118" width="320" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">System validates</text>
+                  <text x="190" y="149" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Blocks Gmail/Yahoo · CAPTCHA · Domain check</text>
+                  <line x1="190" y1="158" x2="190" y2="176" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
+                  <rect x="30" y="176" width="320" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">OTP sent to work email</text>
+                  <text x="190" y="207" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(250,250,248,0.35)">Expires 10 min · Max 3 tries · Hashed storage</text>
+                  <line x1="190" y1="216" x2="190" y2="234" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
+                  <rect x="30" y="234" width="320" height="40" rx="8" fill="rgba(200,169,110,0.05)" stroke="rgba(200,169,110,0.2)" stroke-width="1"/>
+                  <text x="190" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(200,169,110,0.9)">Tenant ID + User ID created</text>
+                  <text x="190" y="265" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" fill="rgba(200,169,110,0.5)">Welcome email with login link sent</text>
+                  <line x1="190" y1="274" x2="190" y2="292" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
+                  <rect x="70" y="292" width="240" height="34" rx="20" fill="rgba(200,169,110,0.15)" stroke="rgba(200,169,110,0.5)" stroke-width="1.5"/>
+                  <text x="190" y="313" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">Login → role-specific dashboard</text>
+                  <line x1="190" y1="326" x2="65" y2="356" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
+                  <line x1="190" y1="326" x2="190" y2="356" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
+                  <line x1="190" y1="326" x2="315" y2="356" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
+                  <rect x="0" y="356" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="60" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Admin dashboard</text>
+                  <rect x="130" y="356" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Buyer dashboard</text>
+                  <rect x="260" y="356" width="120" height="28" rx="7" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="320" y="374" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Supplier portal</text>
+                  <line x1="190" y1="384" x2="190" y2="408" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)" stroke-dasharray="4,3"/>
+                  <rect x="30" y="408" width="320" height="28" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  <text x="190" y="426" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9.5" font-weight="500" fill="rgba(250,250,248,0.5)">Buyer creates RFQ → supplier quotes → approval</text>
+                  <line x1="190" y1="436" x2="95" y2="462" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
+                  <line x1="190" y1="436" x2="285" y2="462" stroke="#C8A96E" stroke-width="1" marker-end="url(#a3)"/>
+                  <rect x="10" y="462" width="155" height="28" rx="7" fill="rgba(46,204,113,0.1)" stroke="rgba(46,204,113,0.3)" stroke-width="1.5"/>
+                  <text x="88" y="480" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="600" fill="#2ECC71">Approved ✓</text>
+                  <rect x="215" y="462" width="155" height="28" rx="7" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+                  <text x="292" y="480" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" font-weight="500" fill="rgba(239,68,68,0.7)">Rejected / No bid</text>
+                  <text x="190" y="510" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="project-tags">
-          <span class="project-tag">Inventory Management</span>
-          <span class="project-tag">Logistics Tracking</span>
-          <span class="project-tag">GRN Workflow</span>
-          <span class="project-tag">Real-time Visibility</span>
-          <span class="project-tag">BRD / FRD</span>
-          <span class="project-tag">UAT</span>
-        </div>
-      </div>
-    </div>
 
-    <div class="project-card reveal reveal-delay-2">
-      <div class="project-top">
-        <div class="project-meta">
-          <span class="project-status status-pre"><span class="status-dot"></span>Pre-Launch</span>
-          <span class="project-client">InESS Solutions — Internal Product</span>
-        </div>
-        <h3 class="project-name">eProcurement Platform</h3>
-        <div class="project-sub">PR-to-PO · RFx &amp; Tenders · Supplier Onboarding</div>
-      </div>
-      <div class="project-collapsible">
-        <p class="project-desc">A comprehensive eProcurement platform consolidating the entire procurement lifecycle in one place — from purchase requisition to PO, covering RFx, tenders, supplier onboarding, invoice management, GRN verification, and a built-in negotiation workspace with both chat and email channels.</p>
-        <div class="project-metrics">
-          <div class="metric"><span class="metric-val">PR→PO</span><div class="metric-lbl">Full cycle in one platform</div></div>
-          <div class="metric"><span class="metric-val">6+</span><div class="metric-lbl">Core modules designed</div></div>
-          <div class="metric"><span class="metric-val">Built-in</span><div class="metric-lbl">Negotiation chat + email</div></div>
-          <div class="metric"><span class="metric-val">0</span><div class="metric-lbl">Defects in UAT</div></div>
-        </div>
-        <div class="project-body">
-          <div class="project-contrib">
-            <div class="body-label">My Contribution</div>
-            <ul class="contrib-list">
-              <li>Conceptualised the full PR-to-PO platform vision and product architecture</li>
-              <li>Designed supplier onboarding workflow with approval gates and document validation</li>
-              <li>Specified RFx and tender module — creation, distribution, response collection</li>
-              <li>Defined invoice management logic with three-way matching and GRN verification rules</li>
-              <li>Designed the built-in negotiation workspace — integrated chat and email threading per RFQ</li>
-              <li>Managed developers through full build cycle and conducted UAT</li>
-            </ul>
+        <div class="project-card poc-card reveal">
+          <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
+          <div class="project-top">
+            <div class="project-meta">
+              <span class="project-status status-poc"><span class="status-dot"></span>POC Designed</span>
+              <span class="project-client">InESS Solutions — Internal Research</span>
+            </div>
+            <h3 class="project-name">Cost Roadmap (CRM) Tool</h3>
+            <div class="project-sub purple">AI-Driven Cost Forecasting · Linear Regression</div>
           </div>
-          <div class="project-flow">
-            <div class="body-label">PR to PO Lifecycle</div>
-            <svg class="flow-svg" viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                  <path d="M2 2L8 5L2 8" fill="none" stroke="#C8A96E" stroke-width="1.5" stroke-linecap="round"/>
-                </marker>
-              </defs>
-              <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#C8A96E">Purchase Requisition raised</text>
-              <line x1="190" y1="42" x2="190" y2="60" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="40" y="60" width="300" height="34" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="81" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Approval matrix routes PR for sign-off</text>
-              <line x1="190" y1="94" x2="190" y2="112" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="40" y="112" width="300" height="34" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">RFx / Tender created &amp; distributed</text>
-              <line x1="190" y1="146" x2="190" y2="164" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="40" y="164" width="300" height="34" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="178" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Supplier quotes received</text>
-              <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(250,250,248,0.3)">In-platform negotiation chat &amp; email active</text>
-              <line x1="190" y1="198" x2="190" y2="216" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="40" y="216" width="300" height="34" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="237" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Bid evaluation &amp; award decision</text>
-              <line x1="190" y1="250" x2="190" y2="268" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="70" y="268" width="240" height="34" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)" stroke-width="1"/>
-              <text x="190" y="289" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#C8A96E">Purchase Order generated</text>
-              <line x1="190" y1="302" x2="190" y2="320" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="40" y="320" width="300" height="34" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="341" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Goods received · GRN verified</text>
-              <line x1="190" y1="354" x2="190" y2="372" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)" stroke-dasharray="4,3"/>
-              <rect x="40" y="372" width="300" height="34" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="386" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="rgba(250,250,248,0.6)">Invoice submitted &amp; 3-way matched</text>
-              <text x="190" y="399" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="rgba(250,250,248,0.3)">PO · GRN · Invoice values reconciled</text>
-              <line x1="190" y1="406" x2="190" y2="424" stroke="#C8A96E" stroke-width="1" marker-end="url(#a5)"/>
-              <rect x="70" y="424" width="240" height="34" rx="20" fill="rgba(46,204,113,0.1)" stroke="rgba(46,204,113,0.3)" stroke-width="1.5"/>
-              <text x="190" y="445" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#2ECC71">Payment approved ✓</text>
-              <text x="190" y="505" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">Designed by Kiruthigasudan R. · InESS Solutions</text>
-            </svg>
+          <div class="project-collapsible">
+            <p class="project-desc">A strategic cost forecasting POC using linear regression to predict future product costs from historical pricing data. Designed to give commodity managers and buyers early visibility on cost trends — enabling proactive sourcing decisions.</p>
+            <div class="project-metrics">
+              <div class="metric"><span class="metric-val purple">POC</span><div class="metric-lbl">Full design complete</div></div>
+              <div class="metric"><span class="metric-val purple">LR</span><div class="metric-lbl">Regression model designed</div></div>
+              <div class="metric"><span class="metric-val purple">Historical</span><div class="metric-lbl">Data analysis framework</div></div>
+            </div>
+            <div class="project-body">
+              <div class="project-contrib">
+                <div class="body-label">My Contribution <button class="add-point-btn" onclick="addBullet(event, this)">+ Point</button></div>
+                <ul class="contrib-list poc-list">
+                  <li>Identified the business problem — reactive cost management</li>
+                  <li>Designed the POC concept: historical cost training model</li>
+                  <li>Defined the input variables — part category, lead times, market indices</li>
+                  <li>Designed the forecasting output — confidence intervals</li>
+                  <li>Documented the full POC specification for future development</li>
+                </ul>
+              </div>
+              <div class="project-flow">
+                <div class="body-label">Cost Forecasting Logic</div>
+                <div class="flow-controls">
+                    <button class="flow-ctrl-btn" onclick="addFlowStep(this)">+ Step</button>
+                    <button class="flow-ctrl-btn" onclick="addFlowArrow(this)">+ Arrow</button>
+                    <button class="flow-ctrl-btn" onclick="clearFlow(this)">Clear</button>
+                    <button class="flow-ctrl-btn flow-delete-btn" onclick="removeFlowSection(this)">Delete Flowchart</button>
+                </div>
+                <svg class="flow-svg" viewBox="0 0 380 440" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M2 2L8 5L2 8" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/>
+                    </marker>
+                  </defs>
+                  <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(139,92,246,0.08)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
+                  <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#8B5CF6">Historical cost data ingested</text>
+                  <line x1="190" y1="42" x2="190" y2="60" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="60" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <text x="190" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Data cleaning &amp; normalisation</text>
+                  <line x1="190" y1="100" x2="190" y2="118" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="118" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Feature engineering</text>
+                  <line x1="190" y1="158" x2="190" y2="176" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="176" width="300" height="40" rx="8" fill="rgba(139,92,246,0.05)" stroke="rgba(139,92,246,0.2)" stroke-width="1"/>
+                  <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(167,139,250,0.9)">Linear regression model trained</text>
+                  <line x1="190" y1="216" x2="190" y2="234" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
+                  <rect x="40" y="234" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                  <text x="190" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Cost forecast generated</text>
+                  <line x1="190" y1="274" x2="190" y2="292" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)"/>
+                  <rect x="60" y="292" width="260" height="36" rx="20" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.5)" stroke-width="1.5"/>
+                  <text x="190" y="314" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#A78BFA">Commodity manager review</text>
+                  <text x="190" y="425" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">POC designed by Kiruthigasudan R. · InESS Solutions</text>
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="project-tags">
-          <span class="project-tag">eProcurement</span>
-          <span class="project-tag">PR to PO</span>
-          <span class="project-tag">RFx &amp; Tenders</span>
-          <span class="project-tag">Supplier Onboarding</span>
-          <span class="project-tag">Invoice Management</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="project-group-label reveal">
-      <span class="project-group-label-text">Proof of Concept &amp; Research</span>
-      <div class="project-group-label-line"></div>
-    </div>
-
-    <div class="project-card poc-card reveal">
-      <div class="project-top">
-        <div class="project-meta">
-          <span class="project-status status-poc"><span class="status-dot"></span>POC Designed</span>
-          <span class="project-client">InESS Solutions — Internal Research</span>
-        </div>
-        <h3 class="project-name">Cost Roadmap (CRM) Tool</h3>
-        <div class="project-sub purple">AI-Driven Cost Forecasting · Linear Regression</div>
-      </div>
-      <div class="project-collapsible">
-        <p class="project-desc">A strategic cost forecasting POC using linear regression to predict future product costs from historical pricing data. Designed to give commodity managers and buyers early visibility on cost trends — enabling proactive sourcing decisions.</p>
-        <div class="project-metrics">
-          <div class="metric"><span class="metric-val purple">POC</span><div class="metric-lbl">Full design complete</div></div>
-          <div class="metric"><span class="metric-val purple">LR</span><div class="metric-lbl">Regression model designed</div></div>
-          <div class="metric"><span class="metric-val purple">Historical</span><div class="metric-lbl">Data analysis framework</div></div>
-        </div>
-        <div class="project-body">
-          <div class="project-contrib">
-            <div class="body-label">My Contribution</div>
-            <ul class="contrib-list poc-list">
-              <li>Identified the business problem — reactive cost management</li>
-              <li>Designed the POC concept: historical cost training model</li>
-              <li>Defined the input variables — part category, lead times, market indices</li>
-              <li>Designed the forecasting output — confidence intervals</li>
-              <li>Documented the full POC specification for future development</li>
-            </ul>
-          </div>
-          <div class="project-flow">
-            <div class="body-label">Cost Forecasting Logic</div>
-            <svg class="flow-svg" viewBox="0 0 380 440" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                  <path d="M2 2L8 5L2 8" fill="none" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/>
-                </marker>
-              </defs>
-              <rect x="80" y="8" width="220" height="34" rx="8" fill="rgba(139,92,246,0.08)" stroke="rgba(139,92,246,0.3)" stroke-width="1"/>
-              <text x="190" y="29" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="#8B5CF6">Historical cost data ingested</text>
-              <line x1="190" y1="42" x2="190" y2="60" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
-              <rect x="40" y="60" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="75" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Data cleaning &amp; normalisation</text>
-              <line x1="190" y1="100" x2="190" y2="118" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
-              <rect x="40" y="118" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="133" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Feature engineering</text>
-              <line x1="190" y1="158" x2="190" y2="176" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
-              <rect x="40" y="176" width="300" height="40" rx="8" fill="rgba(139,92,246,0.05)" stroke="rgba(139,92,246,0.2)" stroke-width="1"/>
-              <text x="190" y="191" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(167,139,250,0.9)">Linear regression model trained</text>
-              <line x1="190" y1="216" x2="190" y2="234" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)" stroke-dasharray="4,3"/>
-              <rect x="40" y="234" width="300" height="40" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-              <text x="190" y="249" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="500" fill="rgba(250,250,248,0.7)">Cost forecast generated</text>
-              <line x1="190" y1="274" x2="190" y2="292" stroke="#8B5CF6" stroke-width="1" marker-end="url(#a6)"/>
-              <rect x="60" y="292" width="260" height="36" rx="20" fill="rgba(139,92,246,0.15)" stroke="rgba(139,92,246,0.5)" stroke-width="1.5"/>
-              <text x="190" y="314" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="11" font-weight="600" fill="#A78BFA">Commodity manager review</text>
-              <text x="190" y="425" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="8.5" fill="rgba(250,250,248,0.2)" font-style="italic">POC designed by Kiruthigasudan R. · InESS Solutions</text>
-            </svg>
-          </div>
-        </div>
-        <div class="project-tags">
-          <span class="project-tag purple-tag">Linear Regression</span>
-          <span class="project-tag purple-tag">Cost Forecasting</span>
-          <span class="project-tag purple-tag">POC Design</span>
-        </div>
-      </div>
     </div>
 
     <div class="project-group-label reveal">
@@ -1490,6 +1456,7 @@ footer {
     </div>
 
     <div class="support-band reveal">
+      <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
       <div class="support-inner">
         <div class="support-left">
           <div class="project-meta">
@@ -1527,28 +1494,35 @@ footer {
     <div class="section-eyebrow reveal">Credentials</div>
     <h2 class="section-title reveal">Certifications</h2>
     <p class="section-sub reveal">Focused self-development in AI, automation, and product thinking.</p>
+    
+    <div class="add-row-btn" onclick="addNewCert()">+ Add New Certification Card</div>
+
     <div class="certs-layout">
       <div>
-        <div class="cert-grid reveal">
+        <div class="cert-grid reveal visible" id="cert-list">
           <div class="cert-card">
+            <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
             <div class="cert-icon">🎓</div>
             <div class="cert-name">Prompt Engineering</div>
             <div class="cert-org">Coursera</div>
             <span class="cert-year">2025</span>
           </div>
           <div class="cert-card">
+            <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
             <div class="cert-icon">🐍</div>
             <div class="cert-name">Python Programming with AI</div>
             <div class="cert-org">DeepLearning.AI</div>
             <span class="cert-year">2025</span>
           </div>
           <div class="cert-card">
+            <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
             <div class="cert-icon">🤖</div>
             <div class="cert-name">AI For Everyone</div>
             <div class="cert-org">Coursera</div>
             <span class="cert-year">2025</span>
           </div>
           <div class="cert-card">
+            <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
             <div class="cert-icon">⚙️</div>
             <div class="cert-name">n8n Automation Workflow</div>
             <div class="cert-org">n8n Official</div>
@@ -1584,7 +1558,7 @@ footer {
           </div>
           <div class="skill-row">
             <span class="skill-row-label">Stakeholder Management</span>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="0.9"></div></div>
+            <div class="skill-bar"><div class="skill-bar-fill" data-width="0.90"></div></div>
           </div>
           <div class="skill-row">
             <span class="skill-row-label">Prompt Engineering</span>
@@ -1647,16 +1621,30 @@ footer {
   </div>
 </footer>
 
+<button class="save-floating-btn" onclick="downloadUpdatedHTML()">💾 Download Code (Saved Edits)</button>
+
 <script>
-/* ── ACCORDION LOGIC ── */
-document.querySelectorAll('.project-card').forEach(card => {
-  card.addEventListener('click', () => {
-    // Optional: Close others
-    // document.querySelectorAll('.project-card').forEach(c => { if(c !== card) c.classList.remove('is-expanded'); });
-    
-    card.classList.toggle('is-expanded');
-  });
-});
+/* ── ACCORDION LOGIC FIX ── */
+function initAccordions() {
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => {
+        // Remove existing listener to prevent double triggers
+        const newCard = card.cloneNode(true);
+        card.parentNode.replaceChild(newCard, card);
+        
+        newCard.addEventListener('click', function(e) {
+            // Check if click was on a button or inside contenteditable
+            if (e.target.closest('.delete-btn') || 
+                e.target.closest('.add-point-btn') || 
+                e.target.closest('.flow-ctrl-btn') ||
+                e.target.getAttribute('contenteditable') === 'true') {
+                return; 
+            }
+            this.classList.toggle('is-expanded');
+        });
+    });
+}
+initAccordions();
 
 /* ── CURSOR ── */
 const dot = document.getElementById('curDot');
@@ -1671,7 +1659,7 @@ function animCursor() {
   requestAnimationFrame(animCursor);
 }
 animCursor();
-document.querySelectorAll('a, button, .skill-block, .project-card, .cert-card, .contact-card, .support-band').forEach(el => {
+document.querySelectorAll('a, button, .skill-block, .project-card, .cert-card, .contact-card, .support-band, .add-row-btn, .add-point-btn, .flow-ctrl-btn').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
 });
@@ -1757,31 +1745,6 @@ const barObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.skills-summary').forEach(el => barObserver.observe(el));
 
-/* ── MAGNETIC HOVER (cards) ── */
-document.querySelectorAll('.project-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 4;
-    card.style.transform = `translateY(-4px) rotateX(${-y}deg) rotateY(${x}deg)`;
-    card.style.transformStyle = 'preserve-3d';
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-});
-
-/* ── SMOOTH ACTIVE NAV ── */
-const sections = document.querySelectorAll('section[id], div[id]');
-const navAs = document.querySelectorAll('.nav-links a');
-window.addEventListener('scroll', () => {
-  let cur = '';
-  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
-  navAs.forEach(a => {
-    a.style.color = a.getAttribute('href') === '#'+cur ? 'rgba(200,169,110,0.9)' : '';
-  });
-});
-
 /* ── COUNTER ANIMATION ── */
 function animateCounter(el, target, suffix='') {
   const isNum = !isNaN(parseFloat(target));
@@ -1814,6 +1777,190 @@ const statObs = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.1 });
 document.querySelectorAll('.stat-grid, .project-metrics').forEach(el => statObs.observe(el));
+
+/* ── ADMIN MODE LOGIC ── */
+window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.code === 'KeyA') {
+        const password = prompt("Admin Password Required:");
+        if (password === "yourpassword123") {
+            enableAdmin();
+        }
+    }
+});
+
+function enableAdmin() {
+    document.body.classList.add('admin-mode');
+    document.querySelectorAll('p, h1, h2, h3, .stat-val, .metric-val, .trait-desc, .skill-tag, .project-sub, .exp-co, .exp-role, li, .cert-name, .cert-org, .cert-year, .project-tag, text').forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+    });
+    alert("Admin Mode Active.\n- Click text to edit.\n- Use '+' buttons to add items.\n- Use flowchart controls to build or delete process logic.");
+}
+
+function deleteItem(e, btn) {
+    e.stopPropagation();
+    if (confirm("Delete this entire card?")) {
+        btn.closest('.project-card, .cert-card').remove();
+    }
+}
+
+function addBullet(e, btn) {
+    e.stopPropagation();
+    const list = btn.closest('.project-body').querySelector('.contrib-list');
+    const newLi = document.createElement('li');
+    newLi.setAttribute('contenteditable', 'true');
+    newLi.textContent = "New contribution point...";
+    list.appendChild(newLi);
+}
+
+/* ── DYNAMIC FLOWCHART BUILDER LOGIC ── */
+function addFlowStep(btn) {
+    const svg = btn.closest('.project-flow').querySelector('.flow-svg');
+    const stepCount = svg.querySelectorAll('rect').length;
+    const yPos = 10 + (stepCount * 70);
+    
+    const currentVB = svg.getAttribute('viewBox').split(' ');
+    if (yPos + 50 > parseInt(currentVB[3])) {
+        svg.setAttribute('viewBox', `0 0 380 ${yPos + 100}`);
+    }
+
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", "80");
+    rect.setAttribute("y", yPos);
+    rect.setAttribute("width", "220");
+    rect.setAttribute("height", "40");
+    rect.setAttribute("rx", "8");
+    rect.setAttribute("fill", "rgba(255,255,255,0.03)");
+    rect.setAttribute("stroke", "rgba(255,255,255,0.1)");
+    
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", "190");
+    text.setAttribute("y", yPos + 25);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("font-family", "DM Sans");
+    text.setAttribute("font-size", "12");
+    text.setAttribute("fill", "white");
+    text.setAttribute("contenteditable", "true");
+    text.textContent = "NEW PROCESS STEP";
+    
+    svg.appendChild(rect);
+    svg.appendChild(text);
+}
+
+function addFlowArrow(btn) {
+    const svg = btn.closest('.project-flow').querySelector('.flow-svg');
+    const rects = svg.querySelectorAll('rect');
+    if (rects.length < 2) return;
+    
+    const lastRect = rects[rects.length - 2];
+    const newRect = rects[rects.length - 1];
+    
+    const y1 = parseInt(lastRect.getAttribute('y')) + 40;
+    const y2 = parseInt(newRect.getAttribute('y'));
+    
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", "190");
+    line.setAttribute("y1", y1);
+    line.setAttribute("x2", "190");
+    line.setAttribute("y2", y2);
+    line.setAttribute("stroke", "#C8A96E");
+    line.setAttribute("stroke-width", "1");
+    line.setAttribute("stroke-dasharray", "4,3");
+    
+    svg.insertBefore(line, newRect);
+}
+
+function clearFlow(btn) {
+    if(!confirm("Clear flowchart content?")) return;
+    const svg = btn.closest('.project-flow').querySelector('.flow-svg');
+    svg.innerHTML = '';
+}
+
+function removeFlowSection(btn) {
+    if(!confirm("Are you sure you want to completely remove the flowchart section from this project?")) return;
+    const flowSection = btn.closest('.project-flow');
+    flowSection.remove();
+}
+
+function addNewProject(type) {
+    const list = type === 'active' ? document.getElementById('project-list-active') : document.getElementById('project-list-pre');
+    const statusClass = type === 'active' ? 'status-live' : 'status-pre';
+    const statusText = type === 'active' ? 'Live & Active' : 'Pre-Launch';
+    
+    const newCard = document.createElement('div');
+    newCard.className = 'project-card reveal visible';
+    newCard.innerHTML = `
+      <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
+      <div class="project-top">
+        <div class="project-meta">
+          <span class="project-status ${statusClass}"><span class="status-dot"></span>${statusText}</span>
+          <span class="project-client" contenteditable="true">CLIENT NAME</span>
+        </div>
+        <h3 class="project-name" contenteditable="true">New Solution Name</h3>
+        <div class="project-sub" contenteditable="true">Workflow Automation Tagline</div>
+      </div>
+      <div class="project-collapsible">
+        <p class="project-desc" contenteditable="true">Business case description...</p>
+        <div class="project-metrics">
+          <div class="metric"><span class="metric-val" contenteditable="true">0%</span><div class="metric-lbl" contenteditable="true">Efficiency Gain</div></div>
+          <div class="metric"><span class="metric-val" contenteditable="true">0</span><div class="metric-lbl" contenteditable="true">Manual Steps Removed</div></div>
+        </div>
+        <div class="project-body">
+          <div class="project-contrib">
+            <div class="body-label">My Contribution <button class="add-point-btn" onclick="addBullet(event, this)">+ Point</button></div>
+            <ul class="contrib-list">
+              <li contenteditable="true">Define your contribution...</li>
+            </ul>
+          </div>
+          <div class="project-flow">
+            <div class="body-label">Process Logic Flow</div>
+            <div class="flow-controls">
+                <button class="flow-ctrl-btn" onclick="addFlowStep(this)">+ Step</button>
+                <button class="flow-ctrl-btn" onclick="addFlowArrow(this)">+ Arrow</button>
+                <button class="flow-ctrl-btn" onclick="clearFlow(this)">Clear</button>
+                <button class="flow-ctrl-btn flow-delete-btn" onclick="removeFlowSection(this)">Delete Flowchart</button>
+            </div>
+            <svg class="flow-svg" viewBox="0 0 380 250" xmlns="http://www.w3.org/2000/svg">
+              <rect x="80" y="10" width="220" height="40" rx="8" fill="rgba(200,169,110,0.08)" stroke="rgba(200,169,110,0.3)"/>
+              <text x="190" y="35" text-anchor="middle" font-family="DM Sans" font-size="12" fill="#C8A96E" contenteditable="true">START PROCESS</text>
+            </svg>
+          </div>
+        </div>
+        <div class="project-tags">
+          <span class="project-tag" contenteditable="true">Tag Name</span>
+        </div>
+      </div>
+    `;
+    list.prepend(newCard);
+    initAccordions();
+}
+
+function addNewCert() {
+    const list = document.getElementById('cert-list');
+    const newCert = document.createElement('div');
+    newCert.className = 'cert-card';
+    newCert.innerHTML = `
+      <button class="delete-btn" onclick="deleteItem(event, this)">X</button>
+      <div class="cert-icon" contenteditable="true">🎓</div>
+      <div class="cert-name" contenteditable="true">New Certification</div>
+      <div class="cert-org" contenteditable="true">Issuer Name</div>
+      <span class="cert-year" contenteditable="true">2026</span>
+    `;
+    list.prepend(newCert);
+}
+
+function downloadUpdatedHTML() {
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelector('body').classList.remove('admin-mode');
+    clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+    const saveBtn = clone.querySelector('.save-floating-btn');
+    if(saveBtn) saveBtn.remove();
+    const finalHTML = "<!DOCTYPE html>\n" + clone.outerHTML;
+    const blob = new Blob([finalHTML], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = "index.html";
+    a.click();
+}
 </script>
 </body>
 </html>
