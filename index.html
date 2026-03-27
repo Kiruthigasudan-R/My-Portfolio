@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kiruthigasudan R — AI Business Analyst</title>
+<title>Kiruthigasudan R | AI Business Analyst | Supply Chain Automation | Chennai</title>
+<meta name="description" content="Techno-Functional Business Analyst with 2+ years designing AI-powered supply chain solutions. Expert in conversational AI, RFQ automation, and agentic workflows. Based in Chennai, open to remote roles."/>
+<meta name="keywords" content="Business Analyst, AI Business Analyst, Supply Chain Automation, Conversational AI, Prompt Engineering, RFQ Automation, Chennai, India"/>
+<meta name="author" content="Kiruthigasudan R"/>
+<!-- Open Graph -->
+<meta property="og:title" content="Kiruthigasudan R | AI Business Analyst | Chennai"/>
+<meta property="og:description" content="Techno-Functional BA with 2+ years building AI-powered supply chain tools. 6 products delivered. 70% manual effort reduction."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://kiruthigasudan-r.github.io/My-Portfolio/"/>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 <style>
 /* ── RESET & ROOT ── */
@@ -205,6 +213,20 @@ canvas#particles {
 }
 .btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
 
+/* ── RESUME DOWNLOAD BUTTON ── */
+.btn-resume {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid rgba(200,169,110,0.35); color: var(--gold);
+  padding: 17px 36px; border-radius: 100px;
+  font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em;
+  transition: all 0.3s; background: var(--gold-dim);
+}
+.btn-resume:hover {
+  border-color: var(--gold); background: rgba(200,169,110,0.2);
+  transform: translateY(-2px); box-shadow: 0 8px 28px var(--gold-dim);
+}
+.btn-resume svg { flex-shrink: 0; }
+
 /* Hero Stats Card */
 .hero-card {
   background: var(--surface); border: 1px solid var(--border2);
@@ -335,6 +357,57 @@ h2.section-title {
 .trait-title { font-size: 1rem; font-weight: 500; color: var(--white); margin-bottom: 6px; }
 .trait-desc { font-size: 0.88rem; color: var(--white40); line-height: 1.65; font-weight: 300; }
 
+/* ── HEADSHOT ── */
+.about-right-col { display: flex; flex-direction: column; gap: 24px; }
+
+.headshot-card {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 24px; overflow: hidden; position: relative;
+}
+.headshot-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.headshot-inner {
+  padding: 28px; display: flex; align-items: center; gap: 20px;
+}
+.headshot-img-wrap {
+  width: 90px; height: 90px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid rgba(200,169,110,0.3);
+  overflow: hidden; position: relative;
+  background: var(--surface2);
+}
+.headshot-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+/* Placeholder shown when no real photo */
+.headshot-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, rgba(200,169,110,0.15), rgba(200,169,110,0.05));
+  font-size: 2.2rem; color: var(--gold);
+}
+.headshot-info { flex: 1; }
+.headshot-name {
+  font-family: var(--serif); font-size: 1.05rem; font-weight: 700;
+  color: var(--white); margin-bottom: 4px;
+}
+.headshot-title { font-size: 0.82rem; color: var(--gold); font-weight: 400; margin-bottom: 10px; }
+.headshot-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.headshot-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--white40);
+  padding: 5px 12px; border-radius: 100px;
+  border: 1px solid var(--border2);
+  transition: all 0.2s;
+}
+.headshot-link:hover { color: var(--gold); border-color: rgba(200,169,110,0.3); }
+.headshot-photo-hint {
+  padding: 0 28px 20px; font-size: 0.75rem; color: var(--white20);
+  font-style: italic;
+}
+
 .exp-card {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 24px; overflow: hidden;
@@ -452,7 +525,7 @@ h2.section-title {
   transition: max-height 0.6s cubic-bezier(0.23,1,0.32,1);
 }
 .project-card.is-expanded .project-collapsible {
-  max-height: 2000px; /* Large enough for content */
+  max-height: 2400px;
 }
 
 /* Header Adjustments for accordion */
@@ -497,9 +570,29 @@ h2.section-title {
 .project-card.is-expanded .project-sub { margin-bottom: 22px; }
 .project-sub.purple { color: var(--purple); }
 
+/* ── BUSINESS PROBLEM HOOK ── */
+.project-problem-hook {
+  margin: 0 48px 0;
+  padding: 18px 22px;
+  background: rgba(200,169,110,0.05);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--white40);
+  font-weight: 300;
+  font-style: italic;
+}
+.project-problem-hook strong { color: var(--gold); font-style: normal; font-weight: 500; }
+.project-card.poc-card .project-problem-hook {
+  background: rgba(139,92,246,0.05);
+  border-left-color: var(--purple);
+}
+.project-card.poc-card .project-problem-hook strong { color: var(--purple); }
+
 .project-desc {
   font-size: 1.02rem; line-height: 1.82; color: var(--white40); font-weight: 300; max-width: 680px;
-  margin: 0 48px 32px;
+  margin: 20px 48px 32px;
 }
 
 .project-metrics {
@@ -661,7 +754,24 @@ h2.section-title {
 .contact-inner { max-width: 820px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
 .contact-inner .section-eyebrow { justify-content: center; }
 .contact-inner h2.section-title { font-size: clamp(2.8rem, 6vw, 5.5rem); margin-bottom: 24px; }
-.contact-inner .section-sub { max-width: 520px; margin: 0 auto 64px; text-align: center; }
+.contact-inner .section-sub { max-width: 520px; margin: 0 auto 40px; text-align: center; }
+
+/* Resume CTA in contact */
+.contact-resume-cta {
+  display: flex; justify-content: center; margin-bottom: 48px;
+}
+.btn-resume-lg {
+  display: inline-flex; align-items: center; gap: 12px;
+  border: 1px solid rgba(200,169,110,0.4); color: var(--gold);
+  padding: 18px 44px; border-radius: 100px;
+  font-size: 0.92rem; font-weight: 600; letter-spacing: 0.06em;
+  transition: all 0.3s; background: var(--gold-dim);
+}
+.btn-resume-lg:hover {
+  border-color: var(--gold); background: rgba(200,169,110,0.18);
+  transform: translateY(-3px); box-shadow: 0 12px 40px var(--gold-dim);
+}
+
 .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; }
 .contact-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
@@ -728,7 +838,8 @@ footer {
   section { padding: 80px 24px; }
   .hero { padding: 100px 24px 70px; }
   .project-top { padding: 32px 28px; }
-  .project-desc { margin: 0 28px 24px; }
+  .project-problem-hook { margin: 0 28px; }
+  .project-desc { margin: 20px 28px 24px; }
   .project-contrib, .project-flow { padding: 28px; }
   .project-tags { padding: 20px 28px; }
   .skills-grid { grid-template-columns: 1fr; }
@@ -912,6 +1023,10 @@ body.admin-mode .save-floating-btn { display: block; }
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
         <a href="#contact" class="btn-ghost">Get in Touch</a>
+        <a href="full_resume_Kiruthigasudan.pdf" download="Kiruthigasudan_R_Resume.pdf" class="btn-resume">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2v8M4 7l3.5 3.5L11 7M3 13h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Resume
+        </a>
       </div>
     </div>
 
@@ -995,7 +1110,38 @@ body.admin-mode .save-floating-btn { display: block; }
         </div>
       </div>
 
-      <div class="reveal reveal-delay-2">
+      <div class="about-right-col reveal reveal-delay-2">
+
+        <!-- ── HEADSHOT CARD ── -->
+        <div class="headshot-card">
+          <div class="headshot-inner">
+            <div class="headshot-img-wrap">
+              <!--
+                TO ADD YOUR PHOTO:
+                Replace the div below with:
+                <img src="your-photo.jpg" alt="Kiruthigasudan R" />
+                Upload the photo to the same folder as index.html on GitHub.
+              -->
+              <div class="headshot-placeholder">K</div>
+            </div>
+            <div class="headshot-info">
+              <div class="headshot-name">Kiruthigasudan R</div>
+              <div class="headshot-title">AI Business Analyst · Chennai</div>
+              <div class="headshot-links">
+                <a href="https://www.linkedin.com/in/kiruthigasudan-rajalingam-6b2940117" target="_blank" class="headshot-link">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  LinkedIn
+                </a>
+                <a href="mailto:kailash714@gmail.com" class="headshot-link">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Email
+                </a>
+              </div>
+            </div>
+          </div>
+          <p class="headshot-photo-hint">💡 Tip: Add your professional headshot by replacing the placeholder above — upload a photo named <code>photo.jpg</code> to GitHub and update the src.</p>
+        </div>
+
         <div class="exp-card">
           <div class="exp-card-header">
             <div class="exp-card-icon">⏱</div>
@@ -1115,6 +1261,7 @@ body.admin-mode .save-floating-btn { display: block; }
             <div class="project-sub">Intelligent Pricing Engine for Multi-Supplier Sourcing</div>
           </div>
           <div class="project-collapsible">
+            <p class="project-problem-hook"><strong>The problem:</strong> Commodity managers at Arista were spending hours manually comparing quotes across 10+ suppliers — with no consistent logic for when to split orders or how to weight cost signals. Pricing decisions were slow, inconsistent, and error-prone.</p>
             <p class="project-desc">An intelligent pricing engine eliminating manual pricing comparison with systematic logic for allocation splits, cost signal weighting, and decision-making under incomplete data. Live and actively used daily by the Arista procurement team.</p>
             <div class="project-metrics">
               <div class="metric"><span class="metric-val">30%</span><div class="metric-lbl">Faster sourcing decisions</div></div>
@@ -1201,6 +1348,7 @@ body.admin-mode .save-floating-btn { display: block; }
             <div class="project-sub">Python-Based RFQ Automation Across Three Modules</div>
           </div>
           <div class="project-collapsible">
+            <p class="project-problem-hook"><strong>The problem:</strong> Arista's procurement team was processing high-volume contract cost adjustments entirely by hand — a slow, error-prone cycle that caused delays across three separate supplier workflows and left no audit trail for compliance.</p>
             <p class="project-desc">A Python-based RFQ automation system spanning three independent procurement modules. Conceptualised to eliminate manual errors and delays in high-volume contract cost adjustments. Live and used daily by the Arista procurement team.</p>
             <div class="project-metrics">
               <div class="metric"><span class="metric-val">3</span><div class="metric-lbl">Independent modules designed</div></div>
@@ -1304,6 +1452,7 @@ body.admin-mode .save-floating-btn { display: block; }
             <div class="project-sub">Multi-Tenant SaaS · Supplier Portal · AI Dashboards</div>
           </div>
           <div class="project-collapsible">
+            <p class="project-problem-hook"><strong>The problem:</strong> SME procurement teams had no affordable, purpose-built platform for managing RFQs end-to-end — they were stitching together email, spreadsheets, and manual approvals. The result was slow cycle times, no visibility, and zero audit trail.</p>
             <p class="project-desc">A fully functional multi-tenant SaaS platform for end-to-end RFQ management — including product website, subscription system, supplier portal, buyer dashboard, and AI-driven KPI reporting. Designed from scratch and built with company developers from my functional specifications.</p>
             <div class="project-metrics">
               <div class="metric"><span class="metric-val">50%</span><div class="metric-lbl">Approval time reduction</div></div>
@@ -1394,6 +1543,7 @@ body.admin-mode .save-floating-btn { display: block; }
             <div class="project-sub purple">AI-Driven Cost Forecasting · Linear Regression</div>
           </div>
           <div class="project-collapsible">
+            <p class="project-problem-hook"><strong>The problem:</strong> Commodity managers were reacting to cost changes after they happened — with no visibility into where prices were heading. Without forecasting, proactive sourcing decisions were impossible, leaving the business exposed to margin risk.</p>
             <p class="project-desc">A strategic cost forecasting POC using linear regression to predict future product costs from historical pricing data. Designed to give commodity managers and buyers early visibility on cost trends — enabling proactive sourcing decisions.</p>
             <div class="project-metrics">
               <div class="metric"><span class="metric-val purple">POC</span><div class="metric-lbl">Full design complete</div></div>
@@ -1576,6 +1726,15 @@ body.admin-mode .save-floating-btn { display: block; }
       <div class="section-eyebrow reveal">Let's Connect</div>
       <h2 class="section-title reveal">Ready to build<br/><em style="color:var(--gold);font-style:normal;">something great?</em></h2>
       <p class="section-sub reveal">Open to AI Business Analyst and AI Consultant roles. Based in Chennai — open to remote and hybrid opportunities worldwide.</p>
+
+      <!-- ── RESUME DOWNLOAD in Contact ── -->
+      <div class="contact-resume-cta reveal">
+        <a href="full_resume_Kiruthigasudan.pdf" download="Kiruthigasudan_R_Resume.pdf" class="btn-resume-lg">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2v10M5 8l4 4 4-4M3 16h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download My Resume
+        </a>
+      </div>
+
       <div class="contact-grid reveal">
         <a href="mailto:kailash714@gmail.com" class="contact-card">
           <div class="contact-icon">✉️</div>
@@ -1593,11 +1752,11 @@ body.admin-mode .save-floating-btn { display: block; }
           </div>
           <div class="contact-arrow">↗</div>
         </a>
-        <a href="https://www.linkedin.com/in/kiruthigasudan-rajalingam-6b2940117" target="_blank" class="contact-card">
+        <a href="https://www.linkedin.com/in/kiruthigasudan-rajalingam-6b2940117" target="_blank" rel="noopener" class="contact-card">
           <div class="contact-icon">💼</div>
           <div>
             <div class="contact-meta-label">LinkedIn</div>
-            <div class="contact-meta-val">kiruthigasudan-rajalingam</div>
+            <div class="contact-meta-val">linkedin.com/in/kiruthigasudan-rajalingam</div>
           </div>
           <div class="contact-arrow">↗</div>
         </a>
@@ -1628,12 +1787,9 @@ body.admin-mode .save-floating-btn { display: block; }
 function initAccordions() {
     const cards = document.querySelectorAll('.project-card');
     cards.forEach(card => {
-        // Remove existing listener to prevent double triggers
         const newCard = card.cloneNode(true);
         card.parentNode.replaceChild(newCard, card);
-        
         newCard.addEventListener('click', function(e) {
-            // Check if click was on a button or inside contenteditable
             if (e.target.closest('.delete-btn') || 
                 e.target.closest('.add-point-btn') || 
                 e.target.closest('.flow-ctrl-btn') ||
@@ -1817,55 +1973,36 @@ function addFlowStep(btn) {
     const svg = btn.closest('.project-flow').querySelector('.flow-svg');
     const stepCount = svg.querySelectorAll('rect').length;
     const yPos = 10 + (stepCount * 70);
-    
     const currentVB = svg.getAttribute('viewBox').split(' ');
     if (yPos + 50 > parseInt(currentVB[3])) {
         svg.setAttribute('viewBox', `0 0 380 ${yPos + 100}`);
     }
-
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("x", "80");
-    rect.setAttribute("y", yPos);
-    rect.setAttribute("width", "220");
-    rect.setAttribute("height", "40");
-    rect.setAttribute("rx", "8");
-    rect.setAttribute("fill", "rgba(255,255,255,0.03)");
+    rect.setAttribute("x", "80"); rect.setAttribute("y", yPos);
+    rect.setAttribute("width", "220"); rect.setAttribute("height", "40");
+    rect.setAttribute("rx", "8"); rect.setAttribute("fill", "rgba(255,255,255,0.03)");
     rect.setAttribute("stroke", "rgba(255,255,255,0.1)");
-    
     const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute("x", "190");
-    text.setAttribute("y", yPos + 25);
-    text.setAttribute("text-anchor", "middle");
-    text.setAttribute("font-family", "DM Sans");
-    text.setAttribute("font-size", "12");
-    text.setAttribute("fill", "white");
-    text.setAttribute("contenteditable", "true");
-    text.textContent = "NEW PROCESS STEP";
-    
-    svg.appendChild(rect);
-    svg.appendChild(text);
+    text.setAttribute("x", "190"); text.setAttribute("y", yPos + 25);
+    text.setAttribute("text-anchor", "middle"); text.setAttribute("font-family", "DM Sans");
+    text.setAttribute("font-size", "12"); text.setAttribute("fill", "white");
+    text.setAttribute("contenteditable", "true"); text.textContent = "NEW PROCESS STEP";
+    svg.appendChild(rect); svg.appendChild(text);
 }
 
 function addFlowArrow(btn) {
     const svg = btn.closest('.project-flow').querySelector('.flow-svg');
     const rects = svg.querySelectorAll('rect');
     if (rects.length < 2) return;
-    
     const lastRect = rects[rects.length - 2];
     const newRect = rects[rects.length - 1];
-    
     const y1 = parseInt(lastRect.getAttribute('y')) + 40;
     const y2 = parseInt(newRect.getAttribute('y'));
-    
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", "190");
-    line.setAttribute("y1", y1);
-    line.setAttribute("x2", "190");
-    line.setAttribute("y2", y2);
-    line.setAttribute("stroke", "#C8A96E");
-    line.setAttribute("stroke-width", "1");
+    line.setAttribute("x1", "190"); line.setAttribute("y1", y1);
+    line.setAttribute("x2", "190"); line.setAttribute("y2", y2);
+    line.setAttribute("stroke", "#C8A96E"); line.setAttribute("stroke-width", "1");
     line.setAttribute("stroke-dasharray", "4,3");
-    
     svg.insertBefore(line, newRect);
 }
 
@@ -1885,7 +2022,6 @@ function addNewProject(type) {
     const list = type === 'active' ? document.getElementById('project-list-active') : document.getElementById('project-list-pre');
     const statusClass = type === 'active' ? 'status-live' : 'status-pre';
     const statusText = type === 'active' ? 'Live & Active' : 'Pre-Launch';
-    
     const newCard = document.createElement('div');
     newCard.className = 'project-card reveal visible';
     newCard.innerHTML = `
@@ -1899,6 +2035,7 @@ function addNewProject(type) {
         <div class="project-sub" contenteditable="true">Workflow Automation Tagline</div>
       </div>
       <div class="project-collapsible">
+        <p class="project-problem-hook" contenteditable="true"><strong>The problem:</strong> Describe the business pain point this solved — what was slow, broken, or manual before this tool existed?</p>
         <p class="project-desc" contenteditable="true">Business case description...</p>
         <div class="project-metrics">
           <div class="metric"><span class="metric-val" contenteditable="true">0%</span><div class="metric-lbl" contenteditable="true">Efficiency Gain</div></div>
